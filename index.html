@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My IDE</title>
+ 
+  <style>
+    /* Reset some default styles */
+body,
+h1,
+h2,
+textarea,
+pre,
+button {
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Set up basic layout */
+body {
+  background-color: #222;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header,
+main,
+footer {
+  padding: 1rem;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.editor {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  background-color: #333;
+  color: #fff;
+}
+
+.output {
+  flex: 1;
+  padding-left: 1rem;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+}
+
+pre {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  color: #fff;
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0062cc;
+}
+
+/* Add some interactive animations */
+button:active {
+  transform: scale(0.95);
+}
+
+textarea:focus {
+  border: 2px solid #007bff;
+}
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>EKCS Live HTML Previewer</h1>
+  </header>
+  <main>
+    <div class="editor">
+      <textarea id="codeEditor" placeholder="Write your html code here..."></textarea>
+    </div>
+    <div class="output">
+      <h2>Output</h2>
+      <pre id="outputTerminal" style="background-color: white; color: black;"></pre>
+    </div>
+  </main>
+  <footer>
+   
+  </footer>
+<script>
+    let textEditor = document.getElementById("codeEditor")
+    let ws = new WebSocket("ws://localhost:3000")
+    textEditor.addEventListener("input", (e)=>{
+            
+        let value = textEditor.value
+        document.getElementById("outputTerminal").innerHTML = value
+        ws.send(value)
+    })
+
+
+    ws.onmessage = function(msg)
+    {
+        document.getElementById("outputTerminal").innerHTML = msg.data
+       textEditor.value = msg.data
+    }
+</script>
+</body>
+
+</html>
